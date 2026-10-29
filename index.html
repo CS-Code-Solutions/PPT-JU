@@ -1,11 +1,10 @@
-
 ```html
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Juliana - Apresentação Interativa</title>
+  <title>Apresentação Interativa - Juliana</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -33,6 +32,7 @@
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
             serif: ['"Playfair Display"', 'serif'],
+            handwriting: ['"Caveat"', 'cursive'],
           },
           animation: {
             'float-slow': 'float 7s ease-in-out infinite',
@@ -44,8 +44,8 @@
               '50%': { transform: 'translateY(-12px) rotate(1.5deg)' },
             },
             pulseGlow: {
-              '0%, 100%': { opacity: 0.3, transform: 'scale(1)' },
-              '50%': { opacity: 0.7, transform: 'scale(1.1)' },
+              '0%, 100%': { opacity: 0.35, transform: 'scale(1)' },
+              '50%': { opacity: 0.75, transform: 'scale(1.08)' },
             }
           }
         }
@@ -56,7 +56,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -65,22 +65,23 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <style>
-    /* Custom Scrollbar & Glassmorphism Utilities */
+    /* Custom Scrollbar & Presentation Styling */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.8); }
+    ::-webkit-scrollbar-track { background: rgba(11, 15, 25, 0.9); }
     ::-webkit-scrollbar-thumb { background: rgba(249, 115, 22, 0.5); border-radius: 999px; }
 
+    /* Glassmorphism Containers */
     .glass-card {
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     }
 
     .glass-pill {
       background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
@@ -96,15 +97,14 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* 3D Flip Cards */
-    .perspective-1000 { perspective: 1000px; }
-    .transform-style-3d { transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-    .rotate-y-180 { transform: rotateY(180deg); }
-
-    /* 3D Slide Viewport */
-    .slide-viewport {
-      perspective: 1200px;
+    /* 3D Slide Viewport Layout (Optimized for PC 16:9 Widescreen) */
+    .presentation-container {
+      perspective: 1400px;
+      width: 100%;
+      max-width: 1380px;
+      height: 100%;
+      max-height: 760px;
+      aspect-ratio: 16 / 9;
     }
 
     .slide {
@@ -115,8 +115,8 @@
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
-      transform: translate3d(0, 0, -200px) scale(0.9) rotateY(-8deg);
-      transition: all 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translate3d(0, 0, -250px) scale(0.88) rotateY(-8deg);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .slide.active {
@@ -128,26 +128,129 @@
     }
 
     .slide.prev-slide {
-      transform: translate3d(-100%, 0, -100px) scale(0.92) rotateY(10deg);
+      transform: translate3d(-100%, 0, -150px) scale(0.9) rotateY(12deg);
     }
 
     .slide.next-slide {
-      transform: translate3d(100%, 0, -100px) scale(0.92) rotateY(-10deg);
+      transform: translate3d(100%, 0, -150px) scale(0.9) rotateY(-12deg);
     }
 
-    /* Polaroid Frame Style */
-    .polaroid-frame {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(240, 240, 240, 0.88));
-      padding: 14px 14px 32px 14px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 5px 15px rgba(249, 115, 22, 0.2);
-      border-radius: 10px;
-      transform: rotate(-2.5deg);
-      transition: all 0.4s ease;
+    /* 3D POLAROID STACK FOCUS STYLING */
+    .polaroid-stack-container {
+      position: relative;
+      width: 360px;
+      height: 440px;
+      perspective: 1200px;
     }
-    .polaroid-frame:hover {
-      transform: rotate(0deg) scale(1.02);
-      box-shadow: 0 25px 50px rgba(249, 115, 22, 0.35);
+
+    .polaroid-item {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(145deg, #ffffff 0%, #f3f4f6 100%);
+      padding: 14px 14px 48px 14px;
+      border-radius: 8px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+      transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                  z-index 0.3s ease, 
+                  box-shadow 0.4s ease,
+                  opacity 0.4s ease;
+      cursor: pointer;
+      color: #1e293b;
+      user-select: none;
     }
+
+    /* Default Off-focus rotations for stack effect */
+    .polaroid-item[data-stack="0"] {
+      transform: translate3d(-35px, 15px, -60px) rotate(-8deg) scale(0.92);
+      z-index: 10;
+      opacity: 0.85;
+    }
+    .polaroid-item[data-stack="1"] {
+      transform: translate3d(30px, -10px, -30px) rotate(6deg) scale(0.95);
+      z-index: 20;
+      opacity: 0.92;
+    }
+    .polaroid-item[data-stack="2"] {
+      transform: translate3d(-10px, -20px, 0px) rotate(-3deg) scale(0.98);
+      z-index: 30;
+      opacity: 0.97;
+    }
+
+    /* ACTIVE FOCUS POLAROID (Jump to Front) */
+    .polaroid-item.stack-focus {
+      transform: translate3d(0, -30px, 80px) rotate(0deg) scale(1.12) !important;
+      z-index: 50 !important;
+      opacity: 1 !important;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(249, 115, 22, 0.3);
+    }
+
+    .polaroid-media {
+      width: 100%;
+      height: 320px;
+      background: #0f172a;
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .polaroid-caption {
+      font-family: 'Caveat', cursive;
+      font-size: 1.6rem;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 10px;
+      color: #0f172a;
+      line-height: 1;
+    }
+
+    /* VIDEO OVERLAY & BLUR EFFECT */
+    .video-overlay-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    .video-overlay-wrapper video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: filter 0.5s ease;
+    }
+
+    .video-backdrop-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.2) 50%, rgba(15, 23, 42, 0.85) 100%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-overlay-wrapper.is-playing .video-backdrop-overlay {
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .video-overlay-wrapper.is-playing .play-btn-circle {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.8);
+    }
+
+    /* 3D FLIP CARDS */
+    .perspective-1000 { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; transition: transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .backface-hidden { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
 
     /* Ambient Glow Leaks */
     .light-leak {
@@ -155,106 +258,486 @@
       width: 45vw;
       height: 45vw;
       border-radius: 50%;
-      filter: blur(100px);
+      filter: blur(110px);
       pointer-events: none;
       opacity: 0.35;
       mix-blend-mode: screen;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans overflow-hidden select-none h-screen w-screen relative">
+<body class="bg-slate-950 text-slate-100 font-sans overflow-hidden select-none h-screen w-screen relative flex items-center justify-center">
 
   <!-- Background Particle Canvas -->
   <canvas id="particleCanvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
   <!-- Ambient Light Glow Circles -->
   <div class="light-leak bg-amber-500/40 -top-20 -left-20 animate-pulse-glow z-0"></div>
-  <div class="light-leak bg-pink-600/30 bottom-0 right-0 animate-pulse-glow z-0" style="animation-delay: 2s;"></div>
-  <div class="light-leak bg-purple-600/25 top-1/3 right-1/4 animate-pulse-glow z-0" style="animation-delay: 1s;"></div>
+  <div class="light-leak bg-pink-600/30 bottom-0 right-0 animate-pulse-glow z-0" style="animation-delay: 2.5s;"></div>
+  <div class="light-leak bg-purple-600/25 top-1/3 right-1/4 animate-pulse-glow z-0" style="animation-delay: 1.2s;"></div>
 
-  <!-- HEADER / CONTROL BAR -->
-  <header class="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-gradient-to-b from-slate-950/90 to-transparent backdrop-blur-sm">
-    <!-- Brand / Title -->
+  <!-- HEADER / CONTROL BAR (PC Presentation Header) -->
+  <header class="absolute top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5 bg-gradient-to-b from-slate-950/90 via-slate-950/40 to-transparent backdrop-blur-sm">
+    <!-- Brand Title -->
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-pink-500 flex items-center justify-center text-white font-serif font-bold text-xl shadow-lg shadow-brand-500/30">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-brand-500 via-pink-500 to-amber-500 flex items-center justify-center text-white font-serif font-bold text-2xl shadow-lg shadow-brand-500/30">
         J
       </div>
       <div>
-        <h1 class="font-serif font-bold text-lg leading-none tracking-wide text-white">Juliana</h1>
-        <p class="text-[11px] text-brand-400 font-medium tracking-wider uppercase">Apresentação Interativa</p>
+        <h1 class="font-serif font-bold text-xl leading-none tracking-wide text-white">Juliana</h1>
+        <p class="text-xs text-brand-400 font-semibold tracking-widest uppercase">Apresentação Pessoal</p>
       </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="flex items-center gap-2 sm:gap-3">
-      <!-- Add New Slide Button (Destacado) -->
-      <button onclick="openAddSlideModal()" class="px-3.5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-brand-500 via-pink-500 to-purple-600 hover:from-brand-400 hover:to-purple-500 transition flex items-center gap-2 shadow-lg shadow-brand-500/25 border border-white/20 active:scale-95" title="Adicionar Novo Slide (Tecla N)">
-        <i class="fa-solid fa-plus text-sm"></i>
-        <span class="hidden sm:inline">+ Novo Slide</span>
-      </button>
-
-      <!-- Sound Toggle -->
-      <button id="soundToggleBtn" onclick="toggleSound()" class="glass-pill px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/15 transition flex items-center gap-2" title="Ativar/Desativar Sons">
-        <i id="soundIcon" class="fa-solid fa-volume-high text-brand-400"></i>
-        <span class="hidden md:inline">Som</span>
-      </button>
-
-      <!-- Media Customizer Panel -->
-      <button onclick="openMediaManager()" class="glass-pill px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/15 transition flex items-center gap-2 border border-white/10" title="Gerenciar Mídias Locais">
-        <i class="fa-solid fa-photo-film text-cyan-400"></i>
-        <span class="hidden lg:inline">Mídias</span>
-      </button>
-
-      <!-- Grid Overview Button -->
-      <button onclick="toggleOverview()" class="glass-pill px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/15 transition flex items-center gap-2" title="Visão Geral em Grade (Tecla O)">
-        <i class="fa-solid fa-border-all text-purple-400"></i>
-        <span class="hidden md:inline">Visão Geral</span>
-      </button>
+    <!-- Presentation Quick Hints & Controls -->
+    <div class="flex items-center gap-4">
+      <div class="hidden md:flex items-center gap-2 glass-pill px-4 py-2 rounded-xl text-xs text-slate-300">
+        <span class="text-brand-400 font-bold"><i class="fa-solid fa-keyboard mr-1.5"></i> Atalhos:</span>
+        <span>Setas / Espaço (Navegar)</span>
+        <span class="text-slate-500">•</span>
+        <span>F (Tela Cheia)</span>
+      </div>
 
       <!-- Fullscreen Toggle -->
-      <button onclick="toggleFullscreen()" class="glass-pill px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/15 transition flex items-center gap-2" title="Modo Tela Cheia (Tecla F)">
-        <i id="fullscreenIcon" class="fa-solid fa-expand text-amber-400"></i>
+      <button onclick="toggleFullscreen()" class="glass-pill px-4 py-2 rounded-xl text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/20 transition flex items-center gap-2 border border-white/10" title="Modo Tela Cheia (Tecla F)">
+        <i id="fullscreenIcon" class="fa-solid fa-expand text-brand-400"></i>
+        <span>Tela Cheia</span>
       </button>
     </div>
   </header>
 
-  <!-- MAIN DYNAMIC PRESENTATION VIEWPORT -->
-  <main id="slideViewport" class="slide-viewport relative w-full h-full flex items-center justify-center p-4 sm:p-8 md:p-12 z-10">
-    <!-- Slides will be dynamically rendered here by JavaScript -->
+  <!-- MAIN PRESENTATION VIEWPORT (16:9 PC Ratio Container) -->
+  <main class="presentation-container relative z-10 flex items-center justify-center p-6">
+
+    <!-- ================= SLIDE 1: CAPA ================= -->
+    <section class="slide active" id="slide-1" data-title="Capa">
+      <div class="w-full h-full glass-card rounded-3xl p-10 md:p-16 flex flex-col justify-center items-center text-center relative overflow-hidden border border-white/15">
+        <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full glass-pill border border-brand-500/40 text-brand-300 text-xs sm:text-sm font-semibold tracking-widest uppercase mb-8 animate-float-slow">
+          <i class="fa-solid fa-sparkles text-amber-400"></i> Apresentação Interativa
+        </div>
+
+        <h1 class="font-serif text-5xl sm:text-7xl lg:text-8xl font-black text-white mb-6 tracking-tight leading-none">
+          Muito Prazer, <span class="text-gradient">Juliana!</span>
+        </h1>
+
+        <p class="text-lg sm:text-2xl text-slate-300 max-w-3xl font-light mb-12 leading-relaxed">
+          Uma jornada visual por memórias de infância, família, vida a dois, aventuras com a motinho na praia e curiosidades.
+        </p>
+
+        <!-- Big Start Action Button -->
+        <button onclick="nextSlide()" class="px-10 py-5 rounded-2xl bg-gradient-to-r from-brand-500 via-pink-500 to-amber-500 hover:from-brand-400 hover:to-amber-400 text-white font-bold text-xl shadow-2xl shadow-brand-500/40 hover:scale-105 active:scale-95 transition-all flex items-center gap-4 group">
+          <span>Iniciar Apresentação</span>
+          <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform"></i>
+        </button>
+
+        <div class="mt-12 flex items-center gap-6 text-xs text-slate-400 font-medium">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-baby text-pink-400"></i> Origens</span>
+          <span>•</span>
+          <span class="flex items-center gap-2"><i class="fa-solid fa-motorcycle text-amber-400"></i> Motinho na Praia</span>
+          <span>•</span>
+          <span class="flex items-center gap-2"><i class="fa-solid fa-masks-theater text-purple-400"></i> Festa a Fantasia</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 2: EU BEBÊ ================= -->
+    <section class="slide" id="slide-2" data-title="Eu Bebê">
+      <div class="w-full h-full glass-card rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-10 border border-white/15">
+        
+        <!-- Left: Polaroid Frame -->
+        <div class="w-full md:w-5/12 flex justify-center">
+          <div class="bg-white p-4 pb-12 rounded-lg shadow-2xl transform -rotate-3 hover:rotate-0 hover:scale-105 transition-all duration-500 max-w-sm w-full border border-slate-200">
+            <div class="aspect-[4/3] bg-slate-900 rounded overflow-hidden relative">
+              <!-- Local Media Source with High Quality Fallback -->
+              <img src="midias/eu_bebe.jpg" onerror="this.src='https://images.pexels.com/photos/35365081/pexels-photo-35365081/free-photo-of-adorable-baby-in-vintage-room-setting.jpeg?cs=tinysrgb&dpr=1&w=600'" alt="Juliana Bebê" class="w-full h-full object-cover">
+            </div>
+            <p class="font-handwriting text-slate-800 text-center text-2xl font-bold mt-4">"O início de tudo... 👶"</p>
+          </div>
+        </div>
+
+        <!-- Right: Content -->
+        <div class="w-full md:w-7/12 flex flex-col items-start text-left">
+          <span class="text-xs font-bold uppercase tracking-widest text-pink-400 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-child-reaching"></i> Primeiros Anos & Raízes
+          </span>
+          <h2 class="font-serif text-4xl sm:text-5xl font-bold text-white mb-6">Eu Bebê</h2>
+
+          <div class="space-y-5 w-full">
+            <div class="glass-card p-6 rounded-2xl border-l-4 border-l-pink-500">
+              <h3 class="font-bold text-white text-xl flex items-center gap-3 mb-2">
+                <i class="fa-solid fa-heart text-pink-400"></i> Curiosidade & Sorrisos
+              </h3>
+              <p class="text-slate-300 text-base leading-relaxed">
+                Desde muito pequena, cheia de energia, fascínio pelas novidades e aquele brilho nos olhos que se manteve ao longo da vida.
+              </p>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border-l-4 border-l-amber-500">
+              <h3 class="font-bold text-white text-xl flex items-center gap-3 mb-2">
+                <i class="fa-solid fa-seedling text-amber-400"></i> A Semente dos Meus Valores
+              </h3>
+              <p class="text-slate-300 text-base leading-relaxed">
+                Memórias doces da infância que formaram a base da minha personalidade, afeto e determinação.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 3: MINHA FAMÍLIA ================= -->
+    <section class="slide" id="slide-3" data-title="Minha Família">
+      <div class="w-full h-full glass-card rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-10 border border-white/15">
+        
+        <!-- Left: Details -->
+        <div class="w-full md:w-6/12 flex flex-col items-start text-left order-2 md:order-1">
+          <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-people-group"></i> Amor Incondicional
+          </span>
+          <h2 class="font-serif text-4xl sm:text-5xl font-bold text-white mb-6">Minha Família</h2>
+
+          <p class="text-slate-300 text-lg mb-8 leading-relaxed">
+            Minha maior riqueza e porto seguro. A família é de onde vem a força, os conselhos valiosos e as melhores gargalhadas reunidas em volta da mesa.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+            <div class="glass-card p-5 rounded-2xl border border-cyan-500/30">
+              <i class="fa-solid fa-house-heart text-cyan-400 text-3xl mb-3"></i>
+              <h4 class="font-bold text-white text-lg mb-1">União de Sempre</h4>
+              <p class="text-xs text-slate-300">Reuniões animadas e apoio em todas as conquistas.</p>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl border border-brand-500/30">
+              <i class="fa-solid fa-hands-holding-circle text-brand-400 text-3xl mb-3"></i>
+              <h4 class="font-bold text-white text-lg mb-1">Base Sólida</h4>
+              <p class="text-xs text-slate-300">Valores e carinho transmitidos em cada detalhe.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Family Photo -->
+        <div class="w-full md:w-6/12 flex justify-center order-1 md:order-2">
+          <div class="relative w-full max-w-md aspect-[4/3] glass-card p-3 rounded-2xl border border-white/20 shadow-2xl overflow-hidden">
+            <!-- Local Media Source with High Quality Fallback -->
+            <img src="midias/familia.jpg" onerror="this.src='https://as2.ftcdn.net/v2/jpg/16/94/69/45/1000_F_1694694587_4pVuvxTU9Pqn8QL4tIIUqRXKTKSx8SAT.jpg'" alt="Família" class="w-full h-full object-cover rounded-xl hover:scale-105 transition-transform duration-700">
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 4: DE NÓS (A DOIS) ================= -->
+    <section class="slide" id="slide-4" data-title="De Nós">
+      <div class="w-full h-full glass-card rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center text-center border border-white/15">
+        <span class="text-xs font-bold uppercase tracking-widest text-pink-400 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-heart-pulse"></i> Companheirismo & Amor
+        </span>
+        <h2 class="font-serif text-4xl sm:text-5xl font-bold text-white mb-4">
+          De Nós <span class="text-gradient">(A Dois)</span>
+        </h2>
+        <p class="text-slate-300 text-base max-w-2xl mb-8">
+          A parceria diária, a cumplicidade em cada projeto e as aventuras compartilhadas lado a lado.
+        </p>
+
+        <!-- Dual Media Frame -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mb-8">
+          <div class="glass-card p-3 rounded-2xl border border-pink-500/30 overflow-hidden group">
+            <div class="aspect-[4/3] rounded-xl overflow-hidden">
+              <img src="midias/casal_1.jpg" onerror="this.src='https://img.magnific.com/premium-photo/mountains-hiking-pointing-man-woman-peak-adventure-nature-landscape-travel-outdoor-trekking-couple-cliff-relax-scenic-clouds-natural-journey-view-looking_590464-210250.jpg'" alt="Casal Viagem" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            </div>
+            <p class="text-xs font-bold text-slate-300 mt-3 uppercase tracking-wider">Viagens & Descobertas</p>
+          </div>
+
+          <div class="glass-card p-3 rounded-2xl border border-brand-500/30 overflow-hidden group">
+            <div class="aspect-[4/3] rounded-xl overflow-hidden">
+              <img src="midias/casal_2.jpg" onerror="this.src='https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?cs=tinysrgb&dpr=2&w=600'" alt="Casal Sorriso" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+            </div>
+            <p class="text-xs font-bold text-slate-300 mt-3 uppercase tracking-wider">Parceria Diária</p>
+          </div>
+        </div>
+
+        <div class="glass-pill px-8 py-3 rounded-full text-sm text-pink-200 border border-pink-500/30 flex items-center gap-3">
+          <i class="fa-solid fa-quote-left text-pink-400 text-lg"></i>
+          <span>"Parceria de verdade é construir juntos todos os dias."</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 5: 3D POLAROID STACK (MOTINHO NA PRAIA) ================= -->
+    <section class="slide" id="slide-5" data-title="Motinho na Praia">
+      <div class="w-full h-full glass-card rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-10 border border-white/15">
+        
+        <!-- Left: Story & Controls -->
+        <div class="w-full md:w-6/12 flex flex-col items-start text-left">
+          <span class="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-motorcycle"></i> Viagens & Liberdade
+          </span>
+          <h2 class="font-serif text-4xl sm:text-5xl font-bold text-white mb-6">
+            Aventuras & <br><span class="text-gradient-gold">A Motinho na Praia</span>
+          </h2>
+
+          <div class="space-y-4 w-full mb-6">
+            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
+              <h4 class="font-bold text-white text-lg flex items-center gap-2 mb-1">
+                <i class="fa-solid fa-helmet-safety text-amber-400"></i> Pé na Estrada & Capacete
+              </h4>
+              <p class="text-slate-300 text-sm">
+                A brisa do mar, o capacete a postos e a sensação de liberdade ao rodar pelas praias.
+              </p>
+            </div>
+
+            <div class="glass-card p-5 rounded-2xl border-l-4 border-l-cyan-500">
+              <h4 class="font-bold text-white text-lg flex items-center gap-2 mb-1">
+                <i class="fa-solid fa-compass text-cyan-400"></i> Colecionando Destinos
+              </h4>
+              <p class="text-slate-300 text-sm">
+                Cada parada renderiza uma história marcante e lembranças inesquecíveis.
+              </p>
+            </div>
+          </div>
+
+          <!-- Stack Interactive Controls -->
+          <div class="flex items-center gap-3">
+            <button onclick="cyclePolaroidStack()" class="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-brand-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 hover:scale-105 active:scale-95 transition flex items-center gap-2">
+              <i class="fa-solid fa-layer-group"></i> Próxima Foto da Pilha
+            </button>
+            <span class="text-xs text-slate-400">(Ou clique direto na Polaroid!)</span>
+          </div>
+        </div>
+
+        <!-- Right: 3D POLAROID STACK FOCUS CONTAINER -->
+        <div class="w-full md:w-6/12 flex justify-center items-center">
+          <div class="polaroid-stack-container" id="polaroidStack">
+            
+            <!-- Polaroid 1 (Photo) -->
+            <div class="polaroid-item stack-focus" data-stack="0" onclick="focusPolaroidCard(0)">
+              <div class="polaroid-media">
+                <img src="midias/capacete_praia.jpg" onerror="this.src='https://images.pexels.com/photos/1119796/pexels-photo-1119796.jpeg?cs=tinysrgb&dpr=2&w=600'" alt="Capacete na Praia" class="w-full h-full object-cover">
+              </div>
+              <p class="polaroid-caption">Capacete & Brisa do Mar 🌊</p>
+            </div>
+
+            <!-- Polaroid 2 (Video Card) -->
+            <div class="polaroid-item" data-stack="1" onclick="focusPolaroidCard(1)">
+              <div class="polaroid-media">
+                <video src="midias/moto_praia.mp4" poster="https://motionarray.imgix.net/motion-array-4218226-NavcJF4Msh-high_0014.jpg?w=660&q=60&fit=max&auto=format" loop muted playsinline class="w-full h-full object-cover"></video>
+              </div>
+              <p class="polaroid-caption">A Motinho na Orla 🏍️</p>
+            </div>
+
+            <!-- Polaroid 3 (Photo) -->
+            <div class="polaroid-item" data-stack="2" onclick="focusPolaroidCard(2)">
+              <div class="polaroid-media">
+                <img src="midias/por_do_sol.jpg" onerror="this.src='https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg?cs=tinysrgb&dpr=2&w=600'" alt="Pôr do Sol" class="w-full h-full object-cover">
+              </div>
+              <p class="polaroid-caption">Pôr do Sol Perfeito 🌅</p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 6: FESTA À FANTASIA (VIDEO OVERLAY + CONFETTI) ================= -->
+    <section class="slide" id="slide-6" data-title="Festa à Fantasia">
+      <div class="w-full h-full glass-card rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-10 border border-white/15">
+        
+        <!-- Left: Content -->
+        <div class="w-full md:w-6/12 flex flex-col items-start text-left order-2 md:order-1">
+          <span class="text-xs font-bold uppercase tracking-widest text-purple-400 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Animação & Alegria
+          </span>
+          <h2 class="font-serif text-4xl sm:text-5xl font-bold text-white mb-6">Festa à Fantasia</h2>
+
+          <p class="text-slate-300 text-lg mb-6 leading-relaxed">
+            Momento de vestir a fantasia, entrar no personagem e celebrar com muita descontração! A inimiga do fim no quesito diversão e boas risadas.
+          </p>
+
+          <!-- Confetti Cannon Button -->
+          <button onclick="launchConfetti()" class="px-6 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 text-white font-bold text-sm shadow-xl shadow-purple-500/30 hover:scale-105 active:scale-95 transition flex items-center gap-3 mb-6">
+            <i class="fa-solid fa-firework text-amber-300 text-lg"></i>
+            <span>Soltar Confetes na Festa! 🎉</span>
+          </button>
+
+          <div class="glass-card p-5 rounded-2xl border border-purple-500/30 w-full">
+            <p class="text-sm text-purple-200 italic">
+              "A vida fica muito mais leve quando comemoramos cada etapa com alegria e boa companhia!"
+            </p>
+          </div>
+        </div>
+
+        <!-- Right: Video Player with Interactive Blur Overlay -->
+        <div class="w-full md:w-6/12 flex justify-center order-1 md:order-2">
+          <div class="w-full max-w-md aspect-[4/3] glass-card p-3 rounded-2xl border border-purple-500/40 shadow-2xl relative">
+            <div class="video-overlay-wrapper" id="festaVideoWrapper">
+              <!-- Local Video Source with Fallback Image Poster -->
+              <video id="festaVideo" src="midias/festa_fantasia.mp4" poster="https://partyfanssg.com/wp-content/uploads/2026/07/costume-party-ideas-1.webp" loop muted playsinline></video>
+              
+              <!-- Interactive Frosted Overlay -->
+              <div class="video-backdrop-overlay" onclick="toggleOverlayVideo('festaVideo', 'festaVideoWrapper')">
+                <div class="play-btn-circle w-16 h-16 rounded-full bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center text-white text-2xl shadow-xl transform transition hover:scale-110 cursor-pointer">
+                  <i class="fa-solid fa-play ml-1"></i>
+                </div>
+                <p class="text-xs text-slate-200 font-semibold mt-3 glass-pill px-3 py-1 rounded-full">Clique para dar Play no Vídeo</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 7: CURIOSIDADES (3D FLIP CARDS) ================= -->
+    <section class="slide" id="slide-7" data-title="Curiosidades">
+      <div class="w-full h-full glass-card rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center text-center border border-white/15">
+        <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-lightbulb"></i> Fatos Especiais
+        </span>
+        <h2 class="font-serif text-4xl sm:text-5xl font-bold text-white mb-3">
+          Curiosidades Sobre Mim
+        </h2>
+        <p class="text-slate-400 text-sm mb-10">
+          (Clique nos cartões para girar e descobrir os detalhes!)
+        </p>
+
+        <!-- 4 3D Flip Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-5xl">
+          
+          <!-- Card 1 -->
+          <div class="perspective-1000 h-56 cursor-pointer" onclick="flipCard(this)">
+            <div class="card-inner relative w-full h-full transform-style-3d rounded-2xl">
+              <!-- Front -->
+              <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-amber-500/30 backface-hidden">
+                <div class="w-14 h-14 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 text-3xl mb-4">
+                  <i class="fa-solid fa-mug-hot"></i>
+                </div>
+                <h4 class="font-bold text-white text-lg">Ritual Matinal</h4>
+                <p class="text-xs text-slate-400 mt-2">Clique para revelar</p>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-amber-600 to-brand-700 text-white rounded-2xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-2xl">
+                <i class="fa-solid fa-mug-hot text-3xl mb-3 text-amber-200"></i>
+                <h5 class="font-bold text-base mb-1">Café Quentinho</h5>
+                <p class="text-xs text-amber-100 leading-relaxed">Não respondo por mim antes do primeiro café bem forte da manhã! ☕</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="perspective-1000 h-56 cursor-pointer" onclick="flipCard(this)">
+            <div class="card-inner relative w-full h-full transform-style-3d rounded-2xl">
+              <!-- Front -->
+              <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-pink-500/30 backface-hidden">
+                <div class="w-14 h-14 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 text-3xl mb-4">
+                  <i class="fa-solid fa-music"></i>
+                </div>
+                <h4 class="font-bold text-white text-lg">Trilha Sonora</h4>
+                <p class="text-xs text-slate-400 mt-2">Clique para revelar</p>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-pink-600 to-purple-700 text-white rounded-2xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-2xl">
+                <i class="fa-solid fa-headphones text-3xl mb-3 text-pink-200"></i>
+                <h5 class="font-bold text-base mb-1">Música o Dia Todo</h5>
+                <p class="text-xs text-pink-100 leading-relaxed">Música para trabalhar, arrumar a casa e pegar a estrada na motinho. 🎧</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="perspective-1000 h-56 cursor-pointer" onclick="flipCard(this)">
+            <div class="card-inner relative w-full h-full transform-style-3d rounded-2xl">
+              <!-- Front -->
+              <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-purple-500/30 backface-hidden">
+                <div class="w-14 h-14 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-3xl mb-4">
+                  <i class="fa-solid fa-clipboard-check"></i>
+                </div>
+                <h4 class="font-bold text-white text-lg">Super Poder</h4>
+                <p class="text-xs text-slate-400 mt-2">Clique para revelar</p>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-purple-600 to-indigo-700 text-white rounded-2xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-2xl">
+                <i class="fa-solid fa-check-double text-3xl mb-3 text-purple-200"></i>
+                <h5 class="font-bold text-base mb-1">Organização</h5>
+                <p class="text-xs text-purple-100 leading-relaxed">Detalhista e fã de listas para manter tudo nos trilhos com eficiência! 📋</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="perspective-1000 h-56 cursor-pointer" onclick="flipCard(this)">
+            <div class="card-inner relative w-full h-full transform-style-3d rounded-2xl">
+              <!-- Front -->
+              <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-cyan-500/30 backface-hidden">
+                <div class="w-14 h-14 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-3xl mb-4">
+                  <i class="fa-solid fa-sun"></i>
+                </div>
+                <h4 class="font-bold text-white text-lg">Energia Solar</h4>
+                <p class="text-xs text-slate-400 mt-2">Clique para revelar</p>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-cyan-600 to-teal-700 text-white rounded-2xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-2xl">
+                <i class="fa-solid fa-water text-3xl mb-3 text-cyan-200"></i>
+                <h5 class="font-bold text-base mb-1">Destino Favorito</h5>
+                <p class="text-xs text-cyan-100 leading-relaxed">Bateu um dia ensolarado no fim de semana? Mala de praia pronta! 🏖️</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SLIDE 8: ENCERRAMENTO ================= -->
+    <section class="slide" id="slide-8" data-title="Encerramento">
+      <div class="w-full h-full glass-card rounded-3xl p-10 md:p-16 flex flex-col items-center justify-center text-center border border-white/15">
+        <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-brand-500 to-pink-500 flex items-center justify-center text-white text-4xl mb-8 shadow-2xl shadow-brand-500/40 animate-bounce">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+
+        <h2 class="font-serif text-5xl sm:text-7xl font-bold text-white mb-6">
+          Muito Obrigada!
+        </h2>
+
+        <p class="text-slate-300 text-xl max-w-2xl mb-12 font-light leading-relaxed">
+          Pronta para novas trocas, projetos e parcerias profissionais no notebook da empresa.
+        </p>
+
+        <button onclick="goToSlide(1)" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-500 to-pink-500 hover:from-brand-400 hover:to-pink-400 text-white font-bold text-base shadow-xl shadow-brand-500/30 transition flex items-center gap-3">
+          <i class="fa-solid fa-rotate-left text-lg"></i>
+          <span>Rever Apresentação</span>
+        </button>
+      </div>
+    </section>
+
   </main>
 
-  <!-- FOOTER / NAVIGATION BAR -->
-  <footer class="absolute bottom-0 left-0 right-0 z-50 px-6 py-4 bg-gradient-to-t from-slate-950/90 to-transparent backdrop-blur-sm flex flex-col gap-2">
-    <!-- Navigation Controls & Current Slide Info -->
+  <!-- FOOTER / SLIDE NAVIGATION BAR -->
+  <footer class="absolute bottom-0 left-0 right-0 z-50 px-8 py-5 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent backdrop-blur-sm flex flex-col gap-2">
     <div class="flex items-center justify-between max-w-6xl mx-auto w-full">
       
       <!-- Prev Button -->
-      <button onclick="prevSlide()" class="glass-pill px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:text-white hover:bg-white/20 transition flex items-center gap-2 border border-white/10">
+      <button onclick="prevSlide()" class="glass-pill px-5 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:text-white hover:bg-white/20 transition flex items-center gap-2 border border-white/10">
         <i class="fa-solid fa-chevron-left text-brand-400"></i>
-        <span class="hidden sm:inline">Anterior</span>
+        <span>Anterior</span>
       </button>
 
-      <!-- Slide Counter, Title & Delete Custom Slide Option -->
-      <div class="flex items-center gap-3">
-        <span id="slideCounter" class="text-xs font-extrabold text-brand-400 tracking-wider font-mono glass-pill px-3 py-1 rounded-lg border border-brand-500/30">
+      <!-- Slide Title & Counter -->
+      <div class="flex items-center gap-4">
+        <span id="slideCounter" class="text-xs font-black text-brand-400 tracking-wider font-mono glass-pill px-3.5 py-1.5 rounded-lg border border-brand-500/30">
           01 / 08
         </span>
-        <span id="slideTitleDisplay" class="text-xs font-bold text-slate-300 hidden md:inline tracking-wide">
+        <span id="slideTitleDisplay" class="text-sm font-bold text-slate-200 tracking-wide">
           Capa
         </span>
-
-        <!-- Delete Custom Slide Button (Rendered if slide is user-created) -->
-        <button id="deleteSlideBtn" onclick="deleteCurrentSlide()" class="hidden text-xs text-red-400 hover:text-red-300 glass-pill px-2.5 py-1 rounded-lg border border-red-500/30 transition items-center gap-1.5" title="Excluir este slide customizado">
-          <i class="fa-solid fa-trash-can"></i>
-          <span class="hidden sm:inline">Excluir</span>
-        </button>
       </div>
 
       <!-- Next Button -->
-      <button onclick="nextSlide()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-pink-500 hover:from-brand-400 hover:to-pink-400 text-white text-xs font-bold shadow-md shadow-brand-500/20 transition flex items-center gap-2">
-        <span class="hidden sm:inline">Próximo</span>
+      <button onclick="nextSlide()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-pink-500 hover:from-brand-400 hover:to-pink-400 text-white text-xs font-bold shadow-lg shadow-brand-500/20 transition flex items-center gap-2">
+        <span>Próximo</span>
         <i class="fa-solid fa-chevron-right"></i>
       </button>
+
     </div>
 
     <!-- Smooth Progress Bar -->
@@ -263,691 +746,67 @@
     </div>
   </footer>
 
-  <!-- MODAL: CRIAR NOVO SLIDE (+ NOVO SLIDE) -->
-  <div id="addSlideModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-xl p-4 sm:p-8 hidden items-center justify-center overflow-y-auto transition-all">
-    <div class="glass-card max-w-2xl w-full rounded-3xl p-6 sm:p-8 border border-white/20 relative shadow-2xl">
-      <button onclick="closeAddSlideModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white text-xl p-2">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <div class="flex items-center gap-3 mb-6">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-pink-500 flex items-center justify-center text-white text-xl">
-          <i class="fa-solid fa-layer-group"></i>
-        </div>
-        <div>
-          <h3 class="font-serif text-2xl font-bold text-white">Criar Novo Slide</h3>
-          <p class="text-xs text-slate-400">Escolha um layout estilizado e defina o título da apresentação</p>
-        </div>
-      </div>
-
-      <!-- Slide Title Input -->
-      <div class="mb-6">
-        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Título do Slide</label>
-        <input type="text" id="newSlideTitleInput" placeholder="Ex: Meus Projetos Futuros, Viagem a Paris..." class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-white/15 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-brand-500 transition">
-      </div>
-
-      <!-- Slide Layout Template Selector -->
-      <div class="mb-8">
-        <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Escolha o Layout do Slide</label>
-        
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          
-          <!-- Option 1: Texto + Mídia -->
-          <div onclick="selectTemplateOption('text_media')" id="tmpl-text_media" class="template-option-card glass-card p-4 rounded-2xl border border-brand-500/50 cursor-pointer hover:border-brand-400 transition flex flex-col gap-2 text-left bg-brand-500/10">
-            <div class="flex items-center justify-between text-brand-400">
-              <i class="fa-solid fa-window-maximize text-lg"></i>
-              <i class="fa-solid fa-circle-check text-xs check-icon"></i>
-            </div>
-            <h4 class="font-bold text-white text-sm">Texto + Mídia</h4>
-            <p class="text-[11px] text-slate-400 leading-tight">Título, descrição e slot de foto ou vídeo lateral.</p>
-          </div>
-
-          <!-- Option 2: Galeria 4 Mídias -->
-          <div onclick="selectTemplateOption('gallery')" id="tmpl-gallery" class="template-option-card glass-card p-4 rounded-2xl border border-white/10 cursor-pointer hover:border-pink-400 transition flex flex-col gap-2 text-left">
-            <div class="flex items-center justify-between text-pink-400">
-              <i class="fa-solid fa-border-all text-lg"></i>
-              <i class="fa-solid fa-circle-check text-xs check-icon hidden"></i>
-            </div>
-            <h4 class="font-bold text-white text-sm">Galeria de Mídias</h4>
-            <p class="text-[11px] text-slate-400 leading-tight">Grade com 4 mídias para mostrar vários momentos.</p>
-          </div>
-
-          <!-- Option 3: Citação / Frase -->
-          <div onclick="selectTemplateOption('quote')" id="tmpl-quote" class="template-option-card glass-card p-4 rounded-2xl border border-white/10 cursor-pointer hover:border-purple-400 transition flex flex-col gap-2 text-left">
-            <div class="flex items-center justify-between text-purple-400">
-              <i class="fa-solid fa-quote-left text-lg"></i>
-              <i class="fa-solid fa-circle-check text-xs check-icon hidden"></i>
-            </div>
-            <h4 class="font-bold text-white text-sm">Frase / Citação</h4>
-            <p class="text-[11px] text-slate-400 leading-tight">Destaque para textos curtos marcantes com autor.</p>
-          </div>
-
-          <!-- Option 4: Vídeo em Destaque -->
-          <div onclick="selectTemplateOption('featured_video')" id="tmpl-featured_video" class="template-option-card glass-card p-4 rounded-2xl border border-white/10 cursor-pointer hover:border-cyan-400 transition flex flex-col gap-2 text-left">
-            <div class="flex items-center justify-between text-cyan-400">
-              <i class="fa-solid fa-circle-play text-lg"></i>
-              <i class="fa-solid fa-circle-check text-xs check-icon hidden"></i>
-            </div>
-            <h4 class="font-bold text-white text-sm">Vídeo Destaque</h4>
-            <p class="text-[11px] text-slate-400 leading-tight">Player de vídeo centralizado em tela cheia.</p>
-          </div>
-
-          <!-- Option 5: Linha do Tempo -->
-          <div onclick="selectTemplateOption('timeline')" id="tmpl-timeline" class="template-option-card glass-card p-4 rounded-2xl border border-white/10 cursor-pointer hover:border-amber-400 transition flex flex-col gap-2 text-left sm:col-span-2 lg:col-span-2">
-            <div class="flex items-center justify-between text-amber-400">
-              <i class="fa-solid fa-timeline text-lg"></i>
-              <i class="fa-solid fa-circle-check text-xs check-icon hidden"></i>
-            </div>
-            <h4 class="font-bold text-white text-sm">Linha do Tempo / Etapas</h4>
-            <p class="text-[11px] text-slate-400 leading-tight">Sequência cronológica de marcos e conquistas importantes.</p>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex justify-end gap-3 pt-4 border-t border-white/10">
-        <button onclick="closeAddSlideModal()" class="px-5 py-2.5 rounded-xl glass-pill hover:bg-white/15 text-slate-300 text-xs font-semibold">
-          Cancelar
-        </button>
-        <button onclick="confirmAddNewSlide()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-pink-500 hover:from-brand-400 hover:to-pink-400 text-white text-xs font-bold shadow-lg shadow-brand-500/20">
-          Adicionar à Apresentação
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- OVERVIEW MODAL (GRID THUMBNAILS) -->
-  <div id="overviewModal" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl p-6 sm:p-10 hidden flex-col justify-between overflow-y-auto transition-all">
-    <div class="flex items-center justify-between max-w-6xl mx-auto w-full mb-6">
-      <div class="flex items-center gap-3">
-        <i class="fa-solid fa-border-all text-2xl text-brand-400"></i>
-        <h2 class="font-serif text-2xl font-bold text-white">Visão Geral dos Slides</h2>
-      </div>
-      <button onclick="toggleOverview()" class="glass-pill px-4 py-2 rounded-xl text-xs font-bold text-slate-300 hover:text-white">
-        <i class="fa-solid fa-xmark text-lg"></i>
-      </button>
-    </div>
-
-    <!-- Grid Thumbnails Container -->
-    <div id="overviewGridContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-6xl mx-auto w-full my-auto py-4">
-      <!-- Generated dynamically -->
-    </div>
-
-    <div class="text-center text-xs text-slate-500">Pressione ESC para fechar</div>
-  </div>
-
-  <!-- MEDIA MANAGER DRAWER (UPLOAD REAL PHOTOS/VIDEOS) -->
-  <div id="mediaManagerModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden justify-end transition-all">
-    <div class="w-full max-w-md bg-slate-900 border-l border-white/10 h-full p-6 overflow-y-auto flex flex-col justify-between shadow-2xl">
-      <div>
-        <div class="flex items-center justify-between pb-4 mb-6 border-b border-white/10">
-          <div class="flex items-center gap-2 text-brand-400 font-bold">
-            <i class="fa-solid fa-photo-film text-xl"></i>
-            <h3 class="text-white font-serif text-lg">Gerenciador de Mídias</h3>
-          </div>
-          <button onclick="closeMediaManager()" class="text-slate-400 hover:text-white p-2">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-
-        <p class="text-xs text-slate-300 mb-6 leading-relaxed">
-          Substitua as imagens e vídeos dos slides por arquivos reais do seu computador! Todas as alterações são salvas automaticamente.
-        </p>
-
-        <!-- Media Upload Slots List -->
-        <div id="mediaManagerSlots" class="space-y-4 text-left">
-          <!-- Dynamically populated -->
-        </div>
-      </div>
-
-      <div class="mt-6 pt-4 border-t border-white/10 flex gap-2">
-        <button onclick="resetPresentationToDefault()" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 font-semibold transition">
-          Restaurar Apresentação Original
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hidden global file input for instant clicks -->
-  <input type="file" id="globalFileInput" accept="image/*,video/*" class="hidden" onchange="handleGlobalFileSelected(event)">
-
-  <!-- JAVASCRIPT APP LOGIC & STATE ENGINE -->
+  <!-- JAVASCRIPT CORE LOGIC -->
   <script>
-    // INITIAL DEFAULT SLIDES ARRAY (Juliana)
-    const initialDefaultSlides = [
-      {
-        id: 'slide-1',
-        title: 'Capa',
-        type: 'capa',
-        badge: 'Apresentação Especial',
-        headline: 'Juliana',
-        subtitle: 'Minha Trajetória',
-        description: 'Um tour interativo com memórias de infância, família, vida a dois, a viagem com a motinho na praia e curiosidades sobre mim.',
-        isDefault: true
-      },
-      {
-        id: 'slide-2',
-        title: 'Eu Bebê',
-        type: 'polaroid',
-        badge: 'Infância & Origens',
-        heading: 'Eu Bebê',
-        caption: '"Primeiros passos e muitas memórias..."',
-        card1Title: 'Curiosidade & Sorrisos',
-        card1Desc: 'Desde pequena, cheia de alegria, fascínio pelas novidades e aquele brilho único que permanece até hoje.',
-        card2Title: 'A Semente dos Valores',
-        card2Desc: 'Base forte construída em família, cheia de carinho, aprendizados e momentos felizes.',
-        mediaUrl: 'https://images.pexels.com/photos/35365081/pexels-photo-35365081/free-photo-of-adorable-baby-in-vintage-room-setting.jpeg?cs=tinysrgb&dpr=1&w=600',
-        isVideo: false,
-        isDefault: true
-      },
-      {
-        id: 'slide-3',
-        title: 'Minha Família',
-        type: 'text_media',
-        badge: 'Amor Incondicional',
-        heading: 'Minha Família',
-        description: 'Minha base para tudo, o porto seguro e o motivo dos melhores sorrisos. Uma família unida que comemora cada vitória junta!',
-        box1Title: 'União de Sempre',
-        box1Desc: 'Reuniões animadas e encontros inesquecíveis.',
-        box2Title: 'Suporte Mútuo',
-        box2Desc: 'O apoio incondicional em qualquer etapa da vida.',
-        mediaUrl: 'https://as2.ftcdn.net/v2/jpg/16/94/69/45/1000_F_1694694587_4pVuvxTU9Pqn8QL4tIIUqRXKTKSx8SAT.jpg',
-        isVideo: false,
-        isDefault: true
-      },
-      {
-        id: 'slide-4',
-        title: 'De Nós',
-        type: 'dual_media',
-        badge: 'Companheirismo & Parceria',
-        heading: 'De Nós (A Dois)',
-        description: 'Histórias compartilhadas, cumplicidade em cada detalhe e o amor que nos guia diariamente.',
-        quote: '"Parceria de verdade é construir juntos todos os dias."',
-        mediaUrl1: 'https://img.magnific.com/premium-photo/mountains-hiking-pointing-man-woman-peak-adventure-nature-landscape-travel-outdoor-trekking-couple-cliff-relax-scenic-clouds-natural-journey-view-looking_590464-210250.jpg',
-        isVideo1: false,
-        mediaUrl2: 'https://images.pexels.com/photos/1024993/pexels-photo-1024993.jpeg?cs=tinysrgb&dpr=2&w=600',
-        isVideo2: false,
-        isDefault: true
-      },
-      {
-        id: 'slide-5',
-        title: 'Motinho na Praia',
-        type: 'moto_beach',
-        badge: 'Aventuras & Destinos',
-        heading: 'Viagens & A Motinho na Praia',
-        box1Title: 'Sensação de Liberdade',
-        box1Desc: 'Pôr do sol no horizonte, a brisa do mar e o capacete pronto para a próxima praia inesquecível.',
-        box2Title: 'Novas Rotas & Histórias',
-        box2Desc: 'Colecionando paisagens e registros únicos das viagens pelo litoral.',
-        mediaUrl: 'https://motionarray.imgix.net/motion-array-4218226-NavcJF4Msh-high_0014.jpg?w=660&q=60&fit=max&auto=format',
-        isVideo: false,
-        isDefault: true
-      },
-      {
-        id: 'slide-6',
-        title: 'Festa à Fantasia',
-        type: 'party_confetti',
-        badge: 'Animação & Criatividade',
-        heading: 'Festa à Fantasia',
-        description: 'Momento de colocar a fantasia, entrar no personagem e celebrar a vida com muita alegria! Risadas garantidas do início ao fim.',
-        quote: '"Comemorar com quem amamos é transformar qualquer momento em uma memória inesquecível!"',
-        mediaUrl: 'https://partyfanssg.com/wp-content/uploads/2026/07/costume-party-ideas-1.webp',
-        isVideo: false,
-        isDefault: true
-      },
-      {
-        id: 'slide-7',
-        title: 'Curiosidades',
-        type: 'flip_cards',
-        badge: 'Fatos Especiais',
-        heading: 'Curiosidades Sobre Mim',
-        subtitle: '(Clique nos cartões abaixo para girar e descobrir!)',
-        isDefault: true
-      },
-      {
-        id: 'slide-8',
-        title: 'Encerramento',
-        type: 'closing',
-        heading: 'Muito Obrigada!',
-        description: 'Pronta para novos projetos, parcerias profissionais e muitas novidades no notebook da empresa!',
-        isDefault: true
-      }
-    ];
-
-    // State Variables
-    let slidesState = [];
     let currentSlide = 1;
-    let soundEnabled = true;
-    let targetUploadSlot = null;
-    let selectedNewTemplate = 'text_media';
+    const totalSlides = 8;
 
-    // Web Audio Synthesizer
-    let audioCtx = null;
+    // 3D POLAROID STACK FOCUS CONTROLLER
+    let activePolaroidIndex = 0;
+    const polaroidCards = document.querySelectorAll('#polaroidStack .polaroid-item');
 
-    function playSlideSound() {
-      if (!soundEnabled) return;
-      try {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function updatePolaroidStackUI() {
+      polaroidCards.forEach((card, index) => {
+        const video = card.querySelector('video');
+        
+        // Compute relative stack index relative to active card
+        const stackPos = (index - activePolaroidIndex + polaroidCards.length) % polaroidCards.length;
+        card.setAttribute('data-stack', stackPos);
+
+        if (index === activePolaroidIndex) {
+          card.classList.add('stack-focus');
+          // Auto play video when Polaroid jumps to focus
+          if (video) {
+            video.currentTime = 0;
+            video.play().catch(e => { /* Autoplay browser handling */ });
+          }
+        } else {
+          card.classList.remove('stack-focus');
+          // Pause video when pushed back into stack
+          if (video) {
+            video.pause();
+          }
         }
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(320, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(680, audioCtx.currentTime + 0.12);
-        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.13);
-      } catch (e) {}
+      });
     }
 
-    function toggleSound() {
-      soundEnabled = !soundEnabled;
-      const icon = document.getElementById('soundIcon');
-      icon.className = soundEnabled ? 'fa-solid fa-volume-high text-brand-400' : 'fa-solid fa-volume-xmark text-slate-500';
+    function cyclePolaroidStack() {
+      activePolaroidIndex = (activePolaroidIndex + 1) % polaroidCards.length;
+      updatePolaroidStackUI();
     }
 
-    // Load & Save State Engine
-    function loadState() {
-      const saved = localStorage.getItem('juliana_slides_v3');
-      if (saved) {
-        try {
-          slidesState = JSON.parse(saved);
-        } catch (e) {
-          slidesState = [...initialDefaultSlides];
-        }
+    function focusPolaroidCard(index) {
+      activePolaroidIndex = index;
+      updatePolaroidStackUI();
+    }
+
+    // VIDEO OVERLAY BLUR & PLAY TOGGLE
+    function toggleOverlayVideo(videoId, wrapperId) {
+      const video = document.getElementById(videoId);
+      const wrapper = document.getElementById(wrapperId);
+
+      if (video.paused) {
+        video.play();
+        wrapper.classList.add('is-playing');
       } else {
-        slidesState = [...initialDefaultSlides];
+        video.pause();
+        wrapper.classList.remove('is-playing');
       }
     }
 
-    function saveState() {
-      try {
-        localStorage.setItem('juliana_slides_v3', JSON.stringify(slidesState));
-      } catch (e) {
-        console.warn('Storage limit for localStorage reached, changes will remain during session.');
-      }
-    }
-
-    // SLIDE HTML GENERATORS
-    function renderSlideHTML(slide, index) {
-      const slideNum = index + 1;
-      
-      switch (slide.type) {
-        case 'capa':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-6xl mx-auto flex flex-col justify-center items-center text-center px-4 relative">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-pill border border-brand-500/30 text-brand-300 text-xs sm:text-sm font-semibold tracking-widest uppercase mb-6 animate-float-slow">
-                  <i class="fa-solid fa-sparkles text-amber-400"></i> ${slide.badge}
-                </div>
-                <h1 class="font-serif text-5xl sm:text-7xl md:text-8xl font-black text-white mb-6 tracking-tight leading-none">
-                  ${slide.headline} <span class="text-gradient block sm:inline">${slide.subtitle}</span>
-                </h1>
-                <p class="text-base sm:text-xl text-slate-300 max-w-2xl font-light mb-10 leading-relaxed">
-                  ${slide.description}
-                </p>
-                <div class="flex flex-col sm:flex-row items-center gap-4">
-                  <button onclick="nextSlide()" class="px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-500 via-pink-500 to-amber-500 hover:from-brand-400 hover:to-amber-400 text-white font-bold text-lg shadow-xl shadow-brand-500/30 hover:scale-105 active:scale-95 transition-all flex items-center gap-3 group">
-                    <span>Iniciar Apresentação</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
-                  </button>
-                  <button onclick="openAddSlideModal()" class="px-6 py-4 rounded-2xl glass-pill hover:bg-white/15 text-slate-200 font-semibold text-base transition flex items-center gap-2 border border-white/20">
-                    <i class="fa-solid fa-plus text-brand-400"></i>
-                    <span>+ Adicionar Slide</span>
-                  </button>
-                </div>
-              </div>
-            </section>`;
-
-        case 'polaroid':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 px-4">
-                <div class="w-full md:w-1/2 flex justify-center relative">
-                  <div class="polaroid-frame relative max-w-md w-full">
-                    <div class="relative overflow-hidden rounded-md bg-slate-900 aspect-[4/3] flex items-center justify-center">
-                      ${slide.isVideo 
-                        ? `<video src="${slide.mediaUrl}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>`
-                        : `<img src="${slide.mediaUrl}" alt="${slide.title}" class="w-full h-full object-cover">`
-                      }
-                    </div>
-                    <button onclick="triggerUploadFor('${slide.id}', 'mediaUrl')" class="absolute bottom-10 right-6 px-3 py-1.5 rounded-lg bg-slate-900/90 hover:bg-slate-900 text-xs font-medium text-pink-300 backdrop-blur-sm border border-white/20 transition flex items-center gap-1.5 shadow-lg">
-                      <i class="fa-solid fa-camera"></i> Trocar Mídia
-                    </button>
-                    <p class="font-serif italic text-slate-800 text-center text-lg mt-3 font-semibold">${slide.caption}</p>
-                  </div>
-                </div>
-                <div class="w-full md:w-1/2 flex flex-col items-start text-left">
-                  <span class="text-xs font-bold uppercase tracking-widest text-pink-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-child-reaching"></i> ${slide.badge}</span>
-                  <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mb-6">${slide.heading}</h2>
-                  <div class="space-y-4 w-full">
-                    <div class="glass-card p-5 rounded-2xl border-l-4 border-l-pink-500">
-                      <h3 class="font-bold text-white text-lg flex items-center gap-2 mb-1"><i class="fa-solid fa-heart text-pink-400"></i> ${slide.card1Title}</h3>
-                      <p class="text-slate-300 text-sm leading-relaxed">${slide.card1Desc}</p>
-                    </div>
-                    <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
-                      <h3 class="font-bold text-white text-lg flex items-center gap-2 mb-1"><i class="fa-solid fa-seedling text-amber-400"></i> ${slide.card2Title}</h3>
-                      <p class="text-slate-300 text-sm leading-relaxed">${slide.card2Desc}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>`;
-
-        case 'text_media':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 px-4">
-                <div class="w-full md:w-1/2 flex flex-col items-start text-left order-2 md:order-1">
-                  <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-star"></i> ${slide.badge || 'Apresentação'}</span>
-                  <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mb-6">${slide.heading || slide.title}</h2>
-                  <p class="text-slate-300 text-base mb-6 leading-relaxed">${slide.description || ''}</p>
-                  ${slide.box1Title ? `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                      <div class="glass-card p-4 rounded-xl border border-cyan-500/30">
-                        <h4 class="font-bold text-white mb-1">${slide.box1Title}</h4>
-                        <p class="text-xs text-slate-300">${slide.box1Desc}</p>
-                      </div>
-                      <div class="glass-card p-4 rounded-xl border border-brand-500/30">
-                        <h4 class="font-bold text-white mb-1">${slide.box2Title}</h4>
-                        <p class="text-xs text-slate-300">${slide.box2Desc}</p>
-                      </div>
-                    </div>` : ''
-                  }
-                </div>
-                <div class="w-full md:w-1/2 flex justify-center order-1 md:order-2">
-                  <div class="relative w-full max-w-md aspect-[4/3] glass-card p-3 rounded-2xl border border-white/20 shadow-2xl overflow-hidden flex items-center justify-center">
-                    <div class="w-full h-full rounded-xl overflow-hidden relative flex items-center justify-center">
-                      ${slide.mediaUrl 
-                        ? (slide.isVideo ? `<video src="${slide.mediaUrl}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>` : `<img src="${slide.mediaUrl}" alt="${slide.title}" class="w-full h-full object-cover">`)
-                        : `<div class="text-slate-500 text-xs flex flex-col items-center gap-2"><i class="fa-solid fa-image text-3xl"></i><span>Clique para carregar mídia</span></div>`
-                      }
-                    </div>
-                    <button onclick="triggerUploadFor('${slide.id}', 'mediaUrl')" class="absolute top-5 right-5 px-3 py-1.5 rounded-lg bg-slate-900/90 hover:bg-slate-900 text-xs font-medium text-cyan-300 backdrop-blur-sm border border-white/20 transition flex items-center gap-1.5 shadow-md">
-                      <i class="fa-solid fa-camera"></i> Trocar Mídia
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>`;
-
-        case 'dual_media':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-6xl mx-auto flex flex-col items-center justify-center px-4 text-center">
-                <span class="text-xs font-bold uppercase tracking-widest text-pink-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-heart-pulse"></i> ${slide.badge}</span>
-                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mb-3">${slide.heading}</h2>
-                <p class="text-slate-300 text-sm sm:text-base max-w-2xl mb-6">${slide.description}</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mb-6">
-                  <div class="glass-card p-3 rounded-2xl relative overflow-hidden border border-pink-500/30">
-                    <div class="aspect-[4/3] rounded-xl overflow-hidden relative flex items-center justify-center">
-                      ${slide.isVideo1 ? `<video src="${slide.mediaUrl1}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>` : `<img src="${slide.mediaUrl1}" class="w-full h-full object-cover">`}
-                    </div>
-                    <button onclick="triggerUploadFor('${slide.id}', 'mediaUrl1')" class="absolute bottom-6 right-5 px-3 py-1.5 rounded-lg bg-slate-900/90 text-xs text-pink-300 border border-white/20"><i class="fa-solid fa-camera"></i> Mídia 1</button>
-                  </div>
-                  <div class="glass-card p-3 rounded-2xl relative overflow-hidden border border-brand-500/30">
-                    <div class="aspect-[4/3] rounded-xl overflow-hidden relative flex items-center justify-center">
-                      ${slide.isVideo2 ? `<video src="${slide.mediaUrl2}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>` : `<img src="${slide.mediaUrl2}" class="w-full h-full object-cover">`}
-                    </div>
-                    <button onclick="triggerUploadFor('${slide.id}', 'mediaUrl2')" class="absolute bottom-6 right-5 px-3 py-1.5 rounded-lg bg-slate-900/90 text-xs text-brand-300 border border-white/20"><i class="fa-solid fa-camera"></i> Mídia 2</button>
-                  </div>
-                </div>
-                <div class="glass-pill px-6 py-2.5 rounded-full text-xs sm:text-sm text-pink-200 border border-pink-500/30 flex items-center gap-2">
-                  <i class="fa-solid fa-quote-left text-pink-400"></i><span>${slide.quote}</span>
-                </div>
-              </div>
-            </section>`;
-
-        case 'moto_beach':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 px-4">
-                <div class="w-full md:w-1/2 flex justify-center relative">
-                  <div class="absolute -top-4 -right-2 z-20 glass-card px-4 py-2.5 rounded-2xl border border-amber-400/50 flex items-center gap-2 text-amber-300 shadow-2xl animate-float-slow">
-                    <i class="fa-solid fa-helmet-safety text-2xl text-amber-400"></i>
-                    <div class="text-left"><p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">Na Estrada</p><p class="text-xs font-bold text-white">Capacete & Pé na Areia</p></div>
-                  </div>
-                  <div class="glass-card p-3 rounded-2xl max-w-md w-full relative overflow-hidden border border-amber-500/30">
-                    <div class="aspect-[4/3] rounded-xl overflow-hidden relative flex items-center justify-center">
-                      ${slide.isVideo ? `<video src="${slide.mediaUrl}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>` : `<img src="${slide.mediaUrl}" class="w-full h-full object-cover">`}
-                    </div>
-                    <button onclick="triggerUploadFor('${slide.id}', 'mediaUrl')" class="absolute bottom-5 right-5 px-3 py-1.5 rounded-lg bg-slate-900/90 text-xs text-amber-300 border border-white/20"><i class="fa-solid fa-camera"></i> Trocar Mídia</button>
-                  </div>
-                </div>
-                <div class="w-full md:w-1/2 flex flex-col items-start text-left">
-                  <span class="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-umbrella-beach"></i> ${slide.badge}</span>
-                  <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mb-6">${slide.heading}</h2>
-                  <div class="space-y-4 w-full">
-                    <div class="glass-card p-4 rounded-xl border-l-4 border-l-amber-500"><h4 class="font-bold text-white text-base mb-1">${slide.box1Title}</h4><p class="text-xs sm:text-sm text-slate-300">${slide.box1Desc}</p></div>
-                    <div class="glass-card p-4 rounded-xl border-l-4 border-l-cyan-500"><h4 class="font-bold text-white text-base mb-1">${slide.box2Title}</h4><p class="text-xs sm:text-sm text-slate-300">${slide.box2Desc}</p></div>
-                  </div>
-                </div>
-              </div>
-            </section>`;
-
-        case 'party_confetti':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 px-4">
-                <div class="w-full md:w-1/2 flex flex-col items-start text-left order-2 md:order-1">
-                  <span class="text-xs font-bold uppercase tracking-widest text-purple-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles"></i> ${slide.badge}</span>
-                  <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mb-6">${slide.heading}</h2>
-                  <p class="text-slate-300 text-sm sm:text-base mb-6 leading-relaxed">${slide.description}</p>
-                  <button onclick="launchConfetti()" class="px-6 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 text-white font-bold text-sm shadow-xl shadow-purple-500/30 transition flex items-center gap-2.5 mb-4 group">
-                    <i class="fa-solid fa-firework text-amber-300"></i><span>Disparar Confetes e Festas!</span>
-                  </button>
-                </div>
-                <div class="w-full md:w-1/2 flex justify-center order-1 md:order-2">
-                  <div class="glass-card p-3 rounded-2xl max-w-md w-full relative border border-purple-500/40 shadow-2xl">
-                    <div class="aspect-[4/3] rounded-xl overflow-hidden relative flex items-center justify-center">
-                      ${slide.isVideo ? `<video src="${slide.mediaUrl}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>` : `<img src="${slide.mediaUrl}" class="w-full h-full object-cover">`}
-                    </div>
-                    <button onclick="triggerUploadFor('${slide.id}', 'mediaUrl')" class="absolute bottom-5 right-5 px-3 py-1.5 rounded-lg bg-slate-900/90 text-xs text-purple-300 border border-white/20"><i class="fa-solid fa-camera"></i> Trocar Mídia</button>
-                  </div>
-                </div>
-              </div>
-            </section>`;
-
-        case 'flip_cards':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-6xl mx-auto flex flex-col items-center justify-center px-4 text-center">
-                <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-lightbulb"></i> ${slide.badge}</span>
-                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mb-2">${slide.heading}</h2>
-                <p class="text-slate-400 text-xs sm:text-sm mb-8">${slide.subtitle}</p>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-5xl">
-                  <div class="perspective-1000 h-52 cursor-pointer group" onclick="flipCard(this)">
-                    <div class="card-inner relative w-full h-full transform-style-3d rounded-2xl">
-                      <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-amber-500/30 backface-hidden">
-                        <i class="fa-solid fa-mug-hot text-amber-400 text-3xl mb-3"></i><h4 class="font-bold text-white text-base">Ritual Matinal</h4><p class="text-[11px] text-slate-400 mt-2">Clique para revelar</p>
-                      </div>
-                      <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-amber-600 to-brand-700 text-white rounded-2xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-2xl">
-                        <i class="fa-solid fa-mug-hot text-2xl mb-2 text-amber-200"></i><h5 class="font-bold text-sm mb-1">Café Quentinho</h5><p class="text-xs text-amber-100">Não respondo por mim sem o primeiro café bem forte de manhã! ☕</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="perspective-1000 h-52 cursor-pointer group" onclick="flipCard(this)">
-                    <div class="card-inner relative w-full h-full transform-style-3d rounded-2xl">
-                      <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-pink-500/30 backface-hidden">
-                        <i class="fa-solid fa-music text-pink-400 text-3xl mb-3"></i><h4 class="font-bold text-white text-base">Trilha Sonora</h4><p class="text-[11px] text-slate-400 mt-2">Clique para revelar</p>
-                      </div>
-                      <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-pink-600 to-purple-700 text-white rounded-2xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-2xl">
-                        <i class="fa-solid fa-headphones text-2xl mb-2 text-pink-200"></i><h5 class="font-bold text-sm mb-1">Música o Dia Todo</h5><p class="text-xs text-pink-100">Trabalhar, viajar de moto ou relaxar: sempre com música! 🎧</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="perspective-1000 h-52 cursor-pointer group" onclick="flipCard(this)">
-                    <div class="card-inner relative w-full h-full transform-style-3d rounded-2xl">
-                      <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-purple-500/30 backface-hidden">
-                        <i class="fa-solid fa-clipboard-check text-purple-400 text-3xl mb-3"></i><h4 class="font-bold text-white text-base">Super Poder</h4><p class="text-[11px] text-slate-400 mt-2">Clique para revelar</p>
-                      </div>
-                      <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-purple-600 to-indigo-700 text-white rounded-2xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-2xl">
-                        <i class="fa-solid fa-check-double text-2xl mb-2 text-purple-200"></i><h5 class="font-bold text-sm mb-1">Organização</h5><p class="text-xs text-purple-100">Detalhista e fã de listas para manter tudo organizado! 📋</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="perspective-1000 h-52 cursor-pointer group" onclick="flipCard(this)">
-                    <div class="card-inner relative w-full h-full transform-style-3d rounded-2xl">
-                      <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center border border-cyan-500/30 backface-hidden">
-                        <i class="fa-solid fa-sun text-cyan-400 text-3xl mb-3"></i><h4 class="font-bold text-white text-base">Lugar Favorito</h4><p class="text-[11px] text-slate-400 mt-2">Clique para revelar</p>
-                      </div>
-                      <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-cyan-600 to-teal-700 text-white rounded-2xl p-6 flex flex-col items-center justify-center rotate-y-180 backface-hidden shadow-2xl">
-                        <i class="fa-solid fa-water text-2xl mb-2 text-cyan-200"></i><h5 class="font-bold text-sm mb-1">Energia Solar</h5><p class="text-xs text-cyan-100">Bateu um dia ensolarado no fim de semana? Mala de praia pronta! 🏖️</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>`;
-
-        case 'gallery':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-6xl mx-auto flex flex-col items-center justify-center px-4 text-center">
-                <span class="text-xs font-bold uppercase tracking-widest text-pink-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-border-all"></i> Galeria de Registros</span>
-                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mb-6">${slide.title}</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-5xl">
-                  ${[1, 2, 3, 4].map(num => `
-                    <div class="glass-card p-2 rounded-2xl relative overflow-hidden border border-white/10 aspect-[4/3] flex items-center justify-center">
-                      ${slide[`mediaUrl${num}`] 
-                        ? (slide[`isVideo${num}`] ? `<video src="${slide[`mediaUrl${num}`]}" autoplay loop muted playsinline class="w-full h-full object-cover rounded-xl"></video>` : `<img src="${slide[`mediaUrl${num}`]}" class="w-full h-full object-cover rounded-xl">`)
-                        : `<div class="text-slate-500 text-xs flex flex-col items-center gap-1"><i class="fa-solid fa-plus text-xl"></i><span>Foto / Vídeo ${num}</span></div>`
-                      }
-                      <button onclick="triggerUploadFor('${slide.id}', 'mediaUrl${num}')" class="absolute bottom-3 right-3 px-2 py-1 rounded-md bg-slate-900/90 text-[10px] text-pink-300 border border-white/20"><i class="fa-solid fa-camera"></i></button>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            </section>`;
-
-        case 'quote':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center px-6">
-                <div class="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-3xl mb-6 border border-purple-500/30">
-                  <i class="fa-solid fa-quote-left"></i>
-                </div>
-                <h2 class="font-serif text-2xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-8">
-                  "${slide.description || 'Uma frase marcante para registrar este momento especial.'}"
-                </h2>
-                <p class="text-brand-400 font-bold uppercase tracking-widest text-sm">— ${slide.title}</p>
-              </div>
-            </section>`;
-
-        case 'featured_video':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-5xl mx-auto flex flex-col items-center justify-center px-4 text-center">
-                <span class="text-xs font-bold uppercase tracking-widest text-cyan-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-circle-play"></i> Vídeo em Destaque</span>
-                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white mb-6">${slide.title}</h2>
-                <div class="glass-card p-3 rounded-2xl w-full max-w-3xl aspect-video relative border border-cyan-500/30 flex items-center justify-center overflow-hidden">
-                  ${slide.mediaUrl 
-                    ? (slide.isVideo ? `<video src="${slide.mediaUrl}" controls autoplay muted class="w-full h-full object-cover rounded-xl"></video>` : `<img src="${slide.mediaUrl}" class="w-full h-full object-cover rounded-xl">`)
-                    : `<div class="text-slate-500 text-sm flex flex-col items-center gap-2"><i class="fa-solid fa-file-video text-4xl"></i><span>Clique abaixo para carregar um vídeo do computador</span></div>`
-                  }
-                  <button onclick="triggerUploadFor('${slide.id}', 'mediaUrl')" class="absolute top-6 right-6 px-3 py-1.5 rounded-lg bg-slate-900/90 text-xs text-cyan-300 border border-white/20"><i class="fa-solid fa-cloud-arrow-up"></i> Carregar Vídeo</button>
-                </div>
-              </div>
-            </section>`;
-
-        case 'timeline':
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-5xl mx-auto flex flex-col items-center justify-center px-4 text-center">
-                <span class="text-xs font-bold uppercase tracking-widest text-amber-400 mb-2 flex items-center gap-2"><i class="fa-solid fa-timeline"></i> Marcos & Conquistas</span>
-                <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white mb-10">${slide.title}</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full">
-                  <div class="glass-card p-6 rounded-2xl border-t-4 border-t-amber-500 text-left">
-                    <span class="text-amber-400 font-mono text-xs font-bold">FASE 01</span>
-                    <h4 class="font-bold text-white text-lg mt-1 mb-2">Primeiras Etapas</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed">Aprendizados, dedicação e construção dos primeiros alicerces.</p>
-                  </div>
-                  <div class="glass-card p-6 rounded-2xl border-t-4 border-t-pink-500 text-left">
-                    <span class="text-pink-400 font-mono text-xs font-bold">FASE 02</span>
-                    <h4 class="font-bold text-white text-lg mt-1 mb-2">Crescimento</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed">Evolução constante, desafios superados e grandes conquistas.</p>
-                  </div>
-                  <div class="glass-card p-6 rounded-2xl border-t-4 border-t-cyan-500 text-left">
-                    <span class="text-cyan-400 font-mono text-xs font-bold">FASE 03</span>
-                    <h4 class="font-bold text-white text-lg mt-1 mb-2">Futuro</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed">Novos projetos, parcerias duradouras e metas inspiradoras.</p>
-                  </div>
-                </div>
-              </div>
-            </section>`;
-
-        case 'closing':
-        default:
-          return `
-            <section class="slide" id="${slide.id}" data-title="${slide.title}">
-              <div class="w-full h-full max-w-5xl mx-auto flex flex-col items-center justify-center text-center px-4">
-                <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-brand-500 to-pink-500 flex items-center justify-center text-white text-3xl mb-6 shadow-2xl shadow-brand-500/30 animate-bounce">
-                  <i class="fa-solid fa-heart"></i>
-                </div>
-                <h2 class="font-serif text-4xl sm:text-6xl font-bold text-white mb-4">${slide.heading}</h2>
-                <p class="text-slate-300 text-base sm:text-xl max-w-xl mb-10 font-light leading-relaxed">${slide.description}</p>
-                <div class="flex flex-wrap items-center justify-center gap-4">
-                  <button onclick="goToSlide(1)" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-pink-500 text-white font-bold text-sm shadow-lg shadow-brand-500/30 transition flex items-center gap-2">
-                    <i class="fa-solid fa-rotate-left"></i><span>Rever Apresentação</span>
-                  </button>
-                  <button onclick="openAddSlideModal()" class="px-7 py-3.5 rounded-xl glass-pill hover:bg-white/15 text-slate-200 font-semibold text-sm transition flex items-center gap-2 border border-white/20">
-                    <i class="fa-solid fa-plus text-amber-400"></i><span>Criar Outro Slide</span>
-                  </button>
-                </div>
-              </div>
-            </section>`;
-      }
-    }
-
-    // Render All Slides to Viewport
-    function renderSlidesViewport() {
-      const viewport = document.getElementById('slideViewport');
-      viewport.innerHTML = slidesState.map((s, idx) => renderSlideHTML(s, idx)).join('');
-    }
-
-    // Render Overview Grid Thumbnails
-    function renderOverviewGrid() {
-      const container = document.getElementById('overviewGridContainer');
-      container.innerHTML = slidesState.map((slide, idx) => {
-        const slideNum = idx + 1;
-        const formattedNum = slideNum < 10 ? `0${slideNum}` : slideNum;
-        return `
-          <div onclick="selectSlideFromOverview(${slideNum})" class="glass-card p-4 rounded-2xl cursor-pointer hover:border-brand-500 transition group text-left relative overflow-hidden">
-            <span class="text-xs font-bold text-brand-400 font-mono">${formattedNum}</span>
-            <h4 class="font-bold text-white mt-1 group-hover:text-brand-300 truncate text-sm">${slide.title}</h4>
-            <p class="text-[11px] text-slate-400 capitalize">${slide.type.replace('_', ' ')}</p>
-            ${!slide.isDefault ? `<span class="absolute top-2 right-2 text-[9px] bg-purple-500/30 text-purple-300 px-1.5 py-0.5 rounded font-mono">Custom</span>` : ''}
-          </div>`;
-      }).join('');
-    }
-
-    // Render Media Manager Drawer Slots
-    function renderMediaManagerList() {
-      const container = document.getElementById('mediaManagerSlots');
-      container.innerHTML = slidesState.filter(s => s.type !== 'capa' && s.type !== 'closing' && s.type !== 'flip_cards' && s.type !== 'quote' && s.type !== 'timeline').map(s => `
-        <div class="glass-card p-3 rounded-xl border border-white/10">
-          <p class="text-xs font-bold text-brand-400 mb-2">${s.title}</p>
-          <input type="file" accept="image/*,video/*" onchange="handleFileUploadFromDrawer(event, '${s.id}')" class="text-xs text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-brand-500/20 file:text-brand-300 hover:file:bg-brand-500/30">
-        </div>
-      `).join('');
-    }
-
-    // UPDATE SLIDE UI & NAVIGATION STATE
+    // SLIDE NAVIGATION ENGINE
     function updateSlidesUI() {
       const slides = document.querySelectorAll('.slide');
-      const total = slidesState.length;
-
-      if (currentSlide > total) currentSlide = total;
-      if (currentSlide < 1) currentSlide = 1;
-
       slides.forEach((slide, idx) => {
         const slideNum = idx + 1;
         slide.classList.remove('active', 'prev-slide', 'next-slide');
@@ -961,44 +820,31 @@
         }
       });
 
-      // Update Header/Footer info
-      const currentSlideData = slidesState[currentSlide - 1];
-      const titleText = currentSlideData ? currentSlideData.title : 'Apresentação';
-      const formattedCur = currentSlide < 10 ? `0${currentSlide}` : currentSlide;
-      const formattedTot = total < 10 ? `0${total}` : total;
+      // Update Slide Info & Progress Bar
+      const currentSlideElem = document.getElementById(`slide-${currentSlide}`);
+      const slideTitle = currentSlideElem ? currentSlideElem.getAttribute('data-title') : 'Apresentação';
 
-      document.getElementById('slideCounter').innerText = `${formattedCur} / ${formattedTot}`;
-      document.getElementById('slideTitleDisplay').innerText = titleText;
+      document.getElementById('slideCounter').innerText = `0${currentSlide} / 0${totalSlides}`;
+      document.getElementById('slideTitleDisplay').innerText = slideTitle;
 
-      // Progress bar
-      const progressPercent = (currentSlide / total) * 100;
+      const progressPercent = (currentSlide / totalSlides) * 100;
       document.getElementById('progressBar').style.width = `${progressPercent}%`;
 
-      // Show/Hide Delete Slide button for non-default or custom slides
-      const deleteBtn = document.getElementById('deleteSlideBtn');
-      if (currentSlideData && !currentSlideData.isDefault) {
-        deleteBtn.classList.remove('hidden');
-        deleteBtn.classList.add('flex');
-      } else {
-        deleteBtn.classList.add('hidden');
-        deleteBtn.classList.remove('flex');
-      }
-
-      // Auto confetti triggers for specific slides
-      if (currentSlideData && (currentSlideData.type === 'party_confetti' || currentSlideData.type === 'closing')) {
+      // Auto trigger confetti on Slides 6 & 8
+      if (currentSlide === 6 || currentSlide === 8) {
         setTimeout(() => launchConfetti(), 350);
       }
-
-      playSlideSound();
     }
 
-    function goToSlide(slideNum) {
-      currentSlide = slideNum;
-      updateSlidesUI();
+    function goToSlide(num) {
+      if (num >= 1 && num <= totalSlides) {
+        currentSlide = num;
+        updateSlidesUI();
+      }
     }
 
     function nextSlide() {
-      if (currentSlide < slidesState.length) {
+      if (currentSlide < totalSlides) {
         currentSlide++;
         updateSlidesUI();
       }
@@ -1011,87 +857,11 @@
       }
     }
 
-    // ADD NEW SLIDE FUNCTIONS
-    function openAddSlideModal() {
-      document.getElementById('addSlideModal').classList.remove('hidden');
-      document.getElementById('addSlideModal').classList.add('flex');
-      document.getElementById('newSlideTitleInput').value = '';
-    }
-
-    function closeAddSlideModal() {
-      document.getElementById('addSlideModal').classList.add('hidden');
-      document.getElementById('addSlideModal').classList.remove('flex');
-    }
-
-    function selectTemplateOption(templateType) {
-      selectedNewTemplate = templateType;
-      document.querySelectorAll('.template-option-card').forEach(card => {
-        card.classList.remove('border-brand-500/50', 'bg-brand-500/10');
-        card.classList.add('border-white/10');
-        const check = card.querySelector('.check-icon');
-        if (check) check.classList.add('hidden');
-      });
-
-      const selected = document.getElementById(`tmpl-${templateType}`);
-      if (selected) {
-        selected.classList.add('border-brand-500/50', 'bg-brand-500/10');
-        selected.classList.remove('border-white/10');
-        const check = selected.querySelector('.check-icon');
-        if (check) check.classList.remove('hidden');
-      }
-    }
-
-    function confirmAddNewSlide() {
-      const titleInput = document.getElementById('newSlideTitleInput').value.trim();
-      const slideTitle = titleInput || `Novo Slide ${slidesState.length + 1}`;
-      const newId = `slide-custom-${Date.now()}`;
-
-      const newSlideObj = {
-        id: newId,
-        title: slideTitle,
-        type: selectedNewTemplate,
-        badge: 'Novo Capítulo',
-        heading: slideTitle,
-        description: 'Clique nas áreas de texto ou carregue mídias do computador para personalizar este slide.',
-        isDefault: false
-      };
-
-      slidesState.push(newSlideObj);
-      saveState();
-
-      // Re-render
-      renderSlidesViewport();
-      renderOverviewGrid();
-      renderMediaManagerList();
-
-      closeAddSlideModal();
-
-      // Jump to newly created slide
-      currentSlide = slidesState.length;
-      updateSlidesUI();
-    }
-
-    function deleteCurrentSlide() {
-      const slideData = slidesState[currentSlide - 1];
-      if (slideData && !slideData.isDefault) {
-        slidesState.splice(currentSlide - 1, 1);
-        saveState();
-
-        renderSlidesViewport();
-        renderOverviewGrid();
-        renderMediaManagerList();
-
-        if (currentSlide > slidesState.length) currentSlide = slidesState.length;
-        updateSlidesUI();
-      }
-    }
-
-    // 3D FLIP CARD LOGIC
-    function flipCard(cardElem) {
-      const inner = cardElem.querySelector('.card-inner');
+    // 3D CARD FLIP TOGGLE
+    function flipCard(cardWrapper) {
+      const inner = cardWrapper.querySelector('.card-inner');
       if (inner) {
         inner.classList.toggle('rotate-y-180');
-        playSlideSound();
       }
     }
 
@@ -1099,7 +869,7 @@
     function launchConfetti() {
       if (typeof confetti === 'function') {
         confetti({
-          particleCount: 85,
+          particleCount: 90,
           spread: 75,
           origin: { y: 0.6 },
           colors: ['#f97316', '#ec4899', '#a855f7', '#06b6d4', '#f59e0b']
@@ -1107,142 +877,29 @@
       }
     }
 
-    // OVERVIEW GRID MODAL
-    function toggleOverview() {
-      const modal = document.getElementById('overviewModal');
-      modal.classList.toggle('hidden');
-      modal.classList.toggle('flex');
-    }
-
-    function selectSlideFromOverview(num) {
-      toggleOverview();
-      goToSlide(num);
-    }
-
     // FULLSCREEN TOGGLE
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {});
-        document.getElementById('fullscreenIcon').className = 'fa-solid fa-compress text-amber-400';
+        document.getElementById('fullscreenIcon').className = 'fa-solid fa-compress text-brand-400';
       } else {
         if (document.exitFullscreen) {
           document.exitFullscreen();
-          document.getElementById('fullscreenIcon').className = 'fa-solid fa-expand text-amber-400';
+          document.getElementById('fullscreenIcon').className = 'fa-solid fa-expand text-brand-400';
         }
       }
     }
 
-    // MEDIA MANAGER & UPLOAD HANDLERS
-    function openMediaManager() {
-      document.getElementById('mediaManagerModal').classList.remove('hidden');
-      document.getElementById('mediaManagerModal').classList.add('flex');
-    }
-
-    function closeMediaManager() {
-      document.getElementById('mediaManagerModal').classList.add('hidden');
-      document.getElementById('mediaManagerModal').classList.remove('flex');
-    }
-
-    function triggerUploadFor(slideId, propertyKey) {
-      targetUploadSlot = { slideId, propertyKey };
-      document.getElementById('globalFileInput').click();
-    }
-
-    function handleGlobalFileSelected(event) {
-      if (event.target.files && event.target.files[0] && targetUploadSlot) {
-        const file = event.target.files[0];
-        const isVideo = file.type.startsWith('video/');
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-          const resultUrl = e.target.result;
-          const slideObj = slidesState.find(s => s.id === targetUploadSlot.slideId);
-
-          if (slideObj) {
-            slideObj[targetUploadSlot.propertyKey] = resultUrl;
-
-            // Handle video boolean toggle if name matches
-            if (targetUploadSlot.propertyKey === 'mediaUrl') slideObj.isVideo = isVideo;
-            if (targetUploadSlot.propertyKey === 'mediaUrl1') slideObj.isVideo1 = isVideo;
-            if (targetUploadSlot.propertyKey === 'mediaUrl2') slideObj.isVideo2 = isVideo;
-
-            saveState();
-            renderSlidesViewport();
-            updateSlidesUI();
-          }
-        };
-
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function handleFileUploadFromDrawer(event, slideId) {
-      if (event.target.files && event.target.files[0]) {
-        const file = event.target.files[0];
-        const isVideo = file.type.startsWith('video/');
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-          const resultUrl = e.target.result;
-          const slideObj = slidesState.find(s => s.id === slideId);
-
-          if (slideObj) {
-            slideObj.mediaUrl = resultUrl;
-            slideObj.isVideo = isVideo;
-            saveState();
-            renderSlidesViewport();
-            updateSlidesUI();
-          }
-        };
-
-        reader.readAsDataURL(file);
-      }
-    }
-
-    function resetPresentationToDefault() {
-      localStorage.removeItem('juliana_slides_v3');
-      slidesState = [...initialDefaultSlides];
-      renderSlidesViewport();
-      renderOverviewGrid();
-      renderMediaManagerList();
-      currentSlide = 1;
-      updateSlidesUI();
-      closeMediaManager();
-    }
-
-    // KEYBOARD SHORTCUTS
+    // KEYBOARD LISTENERS (PC Presentation Controls)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') {
         nextSlide();
       } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
         prevSlide();
-      } else if (e.key === 'o' || e.key === 'O') {
-        toggleOverview();
       } else if (e.key === 'f' || e.key === 'F') {
         toggleFullscreen();
-      } else if (e.key === 'n' || e.key === 'N') {
-        openAddSlideModal();
-      } else if (e.key === 'Escape') {
-        const overviewModal = document.getElementById('overviewModal');
-        if (!overviewModal.classList.contains('hidden')) toggleOverview();
-        closeAddSlideModal();
-        closeMediaManager();
       }
     });
-
-    // TOUCH SWIPE FOR MOBILE
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    window.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, false);
-
-    window.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      if (touchEndX < touchStartX - 50) nextSlide();
-      if (touchEndX > touchStartX + 50) prevSlide();
-    }, false);
 
     // AMBIENT PARTICLES CANVAS
     const canvas = document.getElementById('particleCanvas');
@@ -1262,7 +919,7 @@
         this.size = Math.random() * 2 + 0.5;
         this.speedX = (Math.random() - 0.5) * 0.3;
         this.speedY = (Math.random() - 0.5) * 0.3;
-        this.alpha = Math.random() * 0.6 + 0.2;
+        this.alpha = Math.random() * 0.5 + 0.2;
       }
       update() {
         this.x += this.speedX;
@@ -1291,17 +948,13 @@
 
     window.addEventListener('resize', resizeCanvas);
 
-    // APP INITIALIZATION
+    // INITIALIZATION ON LOAD
     window.onload = function() {
       initParticles();
       animateParticles();
-      loadState();
-      renderSlidesViewport();
-      renderOverviewGrid();
-      renderMediaManagerList();
+      updatePolaroidStackUI();
       updateSlidesUI();
     };
   </script>
 </body>
 </html>
-```
