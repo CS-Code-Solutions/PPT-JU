@@ -705,12 +705,6 @@
             Momento de vestir a fantasia, entrar no personagem e celebrar com muita descontração! A inimiga do fim no quesito diversão e boas risadas.
           </p>
 
-          <!-- Confetti Cannon Button -->
-          <button onclick="launchConfetti()" class="px-6 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 text-white font-bold text-sm shadow-xl shadow-purple-500/30 hover:scale-105 active:scale-95 transition flex items-center gap-3 mb-6">
-            <i class="fa-solid fa-firework text-amber-300 text-lg"></i>
-            <span>Soltar Confetes na Festa! 🎉</span>
-          </button>
-
           <div class="glass-card p-5 rounded-2xl border border-purple-500/30 w-full">
             <p class="text-sm text-purple-200 italic">
               "A vida fica muito mais leve quando comemoramos cada etapa com alegria e boa companhia!"
@@ -1052,8 +1046,8 @@
         updateTablePhotos(currentSlide);
       }
 
-      // Auto trigger confetti on Slides 6 & 8
-      if (currentSlide === 6 || currentSlide === 8) {
+      // Auto trigger confetti on Slide 8
+      if (currentSlide === 8) {
         setTimeout(() => launchConfetti(), 350);
       }
     }
